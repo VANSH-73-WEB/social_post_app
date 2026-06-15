@@ -1,6 +1,14 @@
-import { Heart, MessageCircle, Send } from "lucide-react";
+import { Heart, MessageCircle, Send, Trash2 } from "lucide-react";
 import React from "react";
-function PostCard({ post, session, commentText, onCommentTextChange, onLike, onComment }) {
+function PostCard({
+  post,
+  session,
+  commentText,
+  onCommentTextChange,
+  onLike,
+  onComment,
+  onDelete,
+}) {
   const liked = Boolean(session && post.likes.some((like) => like.user === session.user.id));
   const likeNames = post.likes.map((like) => like.username).join(", ");
   const commentNames = [...new Set(post.comments.map((comment) => comment.username))].join(", ");
@@ -22,16 +30,27 @@ function PostCard({ post, session, commentText, onCommentTextChange, onLike, onC
         <span title={commentNames || "No comments yet"}>{post.commentsCount} comments</span>
       </div>
 
-      <div className="post-actions">
-        <button className={liked ? "liked" : ""} onClick={() => onLike(post.id)}>
-          <Heart size={18} fill={liked ? "currentColor" : "none"} />
-          <span>{liked ? "Liked" : "Like"}</span>
-        </button>
-        <span>
-          <MessageCircle size={18} />
-          Comment
-        </span>
-      </div>
+    <div className="post-actions">
+  <button className={liked ? "liked" : ""} onClick={() => onLike(post.id)}>
+    <Heart size={18} fill={liked ? "currentColor" : "none"} />
+    <span>{liked ? "Liked" : "Like"}</span>
+  </button>
+
+  <span>
+    <MessageCircle size={18} />
+    Comment
+  </span>
+
+  {session && session.user.id === post.author.id && (
+    <button
+      className="delete-btn"
+      onClick={() => onDelete(post.id)}
+    >
+      <Trash2 size={18} />
+      <span>Delete</span>
+    </button>
+  )}
+</div>
 
       {post.comments.length ? (
         <div className="comments">

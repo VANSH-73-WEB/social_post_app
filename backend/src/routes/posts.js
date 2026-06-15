@@ -96,5 +96,27 @@ router.post("/:id/comments", requireAuth, async (req, res) => {
   await post.save();
   res.status(201).json(shapePost(post));
 });
+router.delete("/:id", requireAuth, async (req, res) => {
+  const post = await Post.findById(req.params.id);
+
+  if (!post) {
+    return res.status(404).json({
+      message: "Post not found",
+    });
+  }
+
+  // Check if logged-in user is the author
+  if (post.author.user.toString() !== req.user._id.toString()) {
+    return res.status(403).json({
+      message: "You can only delete your own posts",
+    });
+  }
+
+  await Post.findByIdAndDelete(req.params.id);
+
+  res.json({
+    message: "Post deleted successfully",
+  });
+});
 
 export default router;

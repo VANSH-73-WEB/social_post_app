@@ -175,6 +175,24 @@ function App() {
       setMessage(error.message);
     }
   };
+  const handleDeletePost = async (postId) => {
+  try {
+    await axios.delete(
+      `${API_URL}/posts/${postId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session.token}`,
+        },
+      }
+    );
+
+    setPosts((prev) =>
+      prev.filter((post) => post.id !== postId)
+    );
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   return (
     <Layout session={session} onLogout={handleLogout}>
@@ -210,6 +228,7 @@ function App() {
             onCommentTextChange={setCommentText}
             onLike={toggleLike}
             onComment={addComment}
+            onDelete={handleDeletePost}
           />
         ))}
         {!isLoading && posts.length === 0 ? (
