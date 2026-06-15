@@ -177,20 +177,17 @@ function App() {
   };
   const handleDeletePost = async (postId) => {
   try {
-    await axios.delete(
-      `${API_URL}/posts/${postId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${session.token}`,
-        },
-      }
-    );
+    await request(`/api/posts/${postId}`, {
+      method: "DELETE",
+    });
 
     setPosts((prev) =>
       prev.filter((post) => post.id !== postId)
     );
+
+    setMessage("Post deleted successfully");
   } catch (error) {
-    console.error(error);
+    setMessage(error.message);
   }
 };
 

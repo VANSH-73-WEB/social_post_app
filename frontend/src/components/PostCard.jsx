@@ -8,6 +8,7 @@ function PostCard({
   onLike,
   onComment,
   onDelete,
+  
 }) {
   const liked = Boolean(session && post.likes.some((like) => like.user === session.user.id));
   const likeNames = post.likes.map((like) => like.username).join(", ");
@@ -41,7 +42,8 @@ function PostCard({
     Comment
   </span>
 
-  {session && session.user.id === post.author.id && (
+  {session && session.user.id === post.author.user && (
+    
     <button
       className="delete-btn"
       onClick={() => onDelete(post.id)}
